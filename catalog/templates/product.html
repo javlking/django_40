@@ -1,0 +1,12 @@
+Название: {{ product.name }}<br>
+Описание: {{ product.description }}<br>
+Остаток: {{ product.product_amount }}<br>
+Цена: {{ product.price }}<br>
+Рейтинг: {{ product.reviews }}<br>
+
+<form action="/add-product-to-cart/{{ product.id }}" method="post">
+    {% csrf_token %}
+    <input type="number" name="pr_count" min="1" max="{{ product.product_amount }}">
+    <button>Добавить в корзину</button>
+</form>
+<hr>

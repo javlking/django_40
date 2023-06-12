@@ -1,0 +1,8 @@
+{% for product in category_products %}
+    Название: {{ product.name }}<br>
+    Описание: {{ product.description }}<br>
+    Остаток: {{ product.product_amount }}<br>
+    Цена: {{ product.price }}<br>
+    Рейтинг: {{ product.reviews }}<br>
+<hr>
+{% endfor %}

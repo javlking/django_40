@@ -1,0 +1,7 @@
+КОРЗИНА
+<hr>
+{% for product in cart_products %}
+    Название: {{ product.user_product }}<br>
+    Количество: {{ product.user_product_quantity }}<br>
+<hr>
+{% endfor %}
