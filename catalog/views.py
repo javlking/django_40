@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from . import models
+from . import handlers
 # Create your views here.
 
 
@@ -65,3 +66,32 @@ def get_user_cart(request):
     context = {'cart_products': products_from_cart}
 
     return render(request, 'user_cart.html', context)
+
+
+def complete_order(request):
+    # Получаем корзину пользователей
+    user_cart = models.UserCart.objects.filter(user_id=request.user.id)
+    # Собираем сообщение бота для админа
+    if request.method == 'POST':
+        result_message = 'Новый заказ(из Сайта)\n\n'
+        total = 0
+        for cart in user_cart:
+            result_message += f'Название товара: {cart.user_product}\n' \
+                              f'Количество: {cart.user_product_quantity}\n'
+            total += cart.user_product.price * cart.user_product_quantity
+
+        result_message += f'\n\nИтог: {total}'
+
+        handlers.bot.send_message(583411442, result_message)
+        user_cart.delete()
+        return redirect('/')
+
+    return render(request, 'user_cart.html', {'user_cart': user_cart})
+
+
+def delete_from_user_cart(request, pk):
+    product_to_delete = models.Product.objects.get(id=pk)
+    models.UserCart.objects.filter(user_id=request.user.id, user_product=product_to_delete).delete()
+
+    return redirect('/cart')
+
